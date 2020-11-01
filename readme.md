@@ -1,33 +1,43 @@
-This project generates animations of pytorch optimizers solving toy problems. Examples Below.
+# 可视化pytorch的优化器
+这个工程学习了 [原工程](https://github.com/3springs/viz_torch_optim) 的可视化的方法，主要目的是对比学习
+1. 同一优化器在不同参数下的表现
+2. 同一函数下在不同优化器下的梯度下降表现
 
-[Some nice animations](http://www.denizyuret.com/2015/03/alec-radfords-animations-for.html) were posted a few years ago by Alex Radford but didn't include the Adam optimizer or landscapes with noise.  [Louis Tiao](http://louistiao.me/notes/visualizing-and-animating-optimization-algorithms-with-matplotlib/) blogged about how to make the visualizations. The [pytorch unit tests](https://github.com/pytorch/pytorch/blob/master/test/test_optim.py) show how to run the optimizers on test functions. I pulled these together and shared the result at https://github.com/wassname/viz_torch_optim.
+深度学习是对loss进行梯度下降，从而得到神经网络的参数。本工程以二元函数为例子，提供了二维、三维的静态、动态轨迹图的方法。
+使用者仅需要在core.py中main函数里定义好Problem实例，选择好想要对比的优化器，再选择输出什么轨迹图。如下：
+```python
+def main():
+    problem = Problem(
+        f=beales,  # 二元函数
+        start=[2, 1.7],  # 优化起点
+        minima=[3., 0.5],  # 函数的极小值坐标
+        bound=[[-3, 3], [-3, 3]],  # 函数自变量的绘图范围
+        z_limit=[0, 300],  # 函数值的绘图范围
+        grid_step=0.1,  # 网格的密度
+        train_step=10,  # 训练步数
+        fig=FIG,  # plt.figure实例
+        optimizer_fn_dict=optimizer_fn_dict  # 优化器字典
+      ) 
+    optimizer_fn_dict = dict(
+        SGD=partial(optim.SGD, lr=.4),  # SGD
+        Adadelta=optim.Adadelta,  # Adadelta
+        Adam=partial(optim.Adam, lr=1  # Adam
+    )
 
-# Examples
+    # 选择轨迹图
+    problem.train()
+    problem.show_trace_2d()  # 二维静态轨迹
+    # problem.show_trace_3d()  # 三维静态轨迹
+    # problem.animation_2d()  # 二维动态轨迹
+    # problem.animation_3d()  # 三维动态轨迹
+    plt.legend(loc='upper right')
+    plt.show()
+```
+最后运行
+ ```
+python core.py
+```
+即可。
+Problem.py中存放着一些有趣的二元函数，你也可以使用最简单的二元二次函数。
 
-Please note that each optimizer has a differen't learning rate, so they are not directly comparable. This is because simpler optimizers perform better on low dimensional problems and are often given a smaller learning rate. With the same learning rate, the simpler SGD optimizer races to the finish while Adam crawls along. In that case SGD is too fast to see and Adam is too boring to watch. For visualisation purposes I used differen't learning rates for each optimizer to make them move at similar speeds in the video.
-
-
-## Beales function
-![](docs/videos/beales_20171117_00-02-20_2d.gif)
-
-## Beales function (cyclic annealing)
-![](docs/videos/beales_CyclicLR_20171117_04-51-12_2d.gif)
-
-## Beales function with noise
-![](docs/videos/beales_None_20171124_04-24-27_2d.gif)
-
-## Six humped camel function
-![](docs/videos/six_humped_camel_back_20171115_09-38-57.gif)
-![](docs/videos/six_humped_camel_back_20171115_09-38-57_3d.gif)
-
-<!-- ## Rosenbrock function
-
-![](docs/videos/rosenbrock_20171115_09-47-52.gif) -->
-
-# Usage:
-
-- `git clone https://github.com/wassname/viz_torch_optim`
-- `jupyter notebook`
-- open main.ipynb
-- install any missing dependencies with pip
-- Run and wait, because rendering video is quite slow
+目前图还做得不太美观，欢迎提建议。
