@@ -1,4 +1,3 @@
-# !/Applications/anaconda/envs/4PyCharm/bin/python3.4
 # -*- coding: utf-8 -*-
 
 """A valley"""

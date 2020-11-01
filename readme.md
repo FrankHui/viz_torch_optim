@@ -36,8 +36,18 @@ def main():
 最后运行
  ```
 python core.py
-```
+ ```
 即可。
 Problem.py中存放着一些有趣的二元函数，你也可以使用最简单的二元二次函数。
 
 目前图还做得不太美观，欢迎提建议。
+
+## 示例
+### 二维静态图
+![二维静态图](https://github.com/FrankHui/viz_torch_optim/blob/master/pics/beales_%E4%BA%8C%E7%BB%B4%E9%9D%99%E6%80%81%E5%9B%BE.jpg)
+### 三维静态图
+![二维动态图](https://github.com/FrankHui/viz_torch_optim/blob/master/pics/beales_%E4%B8%89%E7%BB%B4%E9%9D%99%E6%80%81%E5%9B%BE.jpg)
+### 二维动态图
+![三维静态图](https://github.com/FrankHui/viz_torch_optim/blob/master/pics/beales_%E4%BA%8C%E7%BB%B4%E5%8A%A8%E6%80%81%E5%9B%BE.gif)
+### 三维动态图
+![三维动态图](https://github.com/FrankHui/viz_torch_optim/blob/master/pics/beales_%E4%B8%89%E7%BB%B4%E5%8A%A8%E6%80%81%E5%9B%BE.gif)

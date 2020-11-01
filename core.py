@@ -1,4 +1,3 @@
-# !/Applications/anaconda/envs/4PyCharm/bin/python3.4
 # -*- coding: utf-8 -*-
 from functools import partial
 
@@ -39,6 +38,7 @@ class TrajectoryAnimation(animation.FuncAnimation):
 
         self.lines = [ax.plot([], [], label=label, lw=1)[0] for label in trace_dict]
         self.points = [ax.plot([], [], 'o', color=line.get_color())[0] for line in self.lines]
+        plt.legend(loc='upper right')
 
         super(TrajectoryAnimation, self).__init__(fig, self.animate, init_func=self.init_anim,
                                                   frames=frames, interval=interval, blit=blit,
@@ -79,6 +79,7 @@ class TrajectoryAnimation3D(animation.FuncAnimation):
             frames = max(trace.shape[0] for trace in trace_dict.values())
 
         self.lines = [ax.plot([], [], [], label=label, lw=1)[0] for label in trace_dict]
+        plt.legend(loc='upper right')
 
         super(TrajectoryAnimation3D, self).__init__(fig, self.animate, init_func=self.init_anim,
                                                     frames=frames, interval=interval, blit=blit,
@@ -179,9 +180,9 @@ class Problem:
             for name, trace in self.trace_dict.items():
                 coors = [i[:2] for i in trace]
                 ax.plot(*zip(*coors), label=name)
-
+            ax.legend(loc='upper right')
         if save:
-            plt.savefig(f"{self.f.__name__}_二维静态图.jpg")
+            plt.savefig(f"./pics/{self.f.__name__}_二维静态图.jpg")
 
     def show_trace_3d(self, show_trace=True, save=True):
         """展示三维面 & 梯度下降的轨迹"""
@@ -221,24 +222,25 @@ class Problem:
                 x, y, z = trace[:, 0], trace[:, 1], trace[:, 2]
                 line = ax.plot(x, y, z, label=name)[0]
                 line.set_3d_properties(z)
+            ax.legend(loc='upper right')
         if save:
-            plt.savefig(f"{self.f.__name__}_三维静态图.jpg")
+            plt.savefig(f"./pics/{self.f.__name__}_三维静态图.jpg")
 
-    def animation_2d(self, show_static_trace=False):
-        self.show_trace_2d(show_static_trace)  # 默认不展示固定的轨迹
+    def animation_2d(self, show_static_trace=False, save_static_trace=False):
+        self.show_trace_2d(show_static_trace, save_static_trace)  # 默认不展示固定的轨迹
 
         ax = plt.gca()
         fps = 30
-        save_file = f"{self.f.__name__}_二维动态图.gif"
+        save_file = f"./pics/{self.f.__name__}_二维动态图.gif"
         anim = TrajectoryAnimation(self.trace_dict, ax=ax, interval=1000 // fps)
         anim.save(save_file, fps=fps, writer='PillowWriter')
 
-    def animation_3d(self, show_static_trace=False):
-        self.show_trace_3d(show_static_trace)  # 默认不展示固定的轨迹
+    def animation_3d(self, show_static_trace=False, save_static_trace=False):
+        self.show_trace_3d(show_static_trace, save_static_trace)  # 默认不展示固定的轨迹
 
         ax = plt.gca()
         fps = 30
-        save_file = f"{self.f.__name__}_三维动态图.gif"
+        save_file = f"./pics/{self.f.__name__}_三维动态图.gif"
         anim = TrajectoryAnimation3D(self.trace_dict, ax=ax, interval=1000 // fps)
         anim.save(save_file, fps=fps, writer='PillowWriter')
 
@@ -275,7 +277,7 @@ def main():
         bound=[[-4.5, 4.5], [-4.5, 5.5]],
         z_limit=[0, 300],  # 如果bound和grid_step选择不恰当，使得Z轴过长，而梯度下降轨迹在Z轴太短，会以为梯度下降在一个平面内，故取Z轴截断
         grid_step=0.1,
-        train_step=1000,
+        train_step=100,
         fig=FIG,
         optimizer_fn_dict=optimizer_fn_dict)
     problem.train()
@@ -283,7 +285,7 @@ def main():
     # problem.show_trace_3d()
     # problem.animation_2d()
     # problem.animation_3d()
-    plt.legend(loc='upper right')
+    # plt.legend(loc='upper right')
     plt.show()
 
 
